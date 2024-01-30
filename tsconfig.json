@@ -17,10 +17,13 @@
     "baseUrl": ".",
     "paths": {
       "@/*": ["src/*"],
+      "@@/*": [".dumi/tmp/*"],
+      "yuqi-ui": ["src"],
+      "yuqi-ui/*": ["src/components/*", "*"],
     },
 
     /* Linting */
     "strict": true,
   },
-  "include": ["src"],
+  "include": [".dumirc.ts", "src/components/**/*"],
 }
