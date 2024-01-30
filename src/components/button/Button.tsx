@@ -2,35 +2,63 @@ import "./button.scss";
 
 import React from "react";
 
-export interface BaseButtonProps {
-  type?: "submit" | "reset" | "button" | undefined;
+// 按钮基础属性
+interface BaseButtonProps {
+  type?: "primary" | "dashed" | "link" | "text" | "default";
   disabled?: boolean;
   className?: string;
   children?: React.ReactNode;
   styles?: React.CSSProperties;
-  backgroundColor?: string;
-  size?: "small" | "medium" | "large";
-  primary?: boolean;
+  size?: "small" | "default" | "large";
 }
 
-function Button(props: BaseButtonProps) {
-  const { type, disabled, children, className, styles, primary, size } = props;
-  const mode = primary
-    ? "storybook-button--primary"
-    : "storybook-button--secondary";
+// 原生按钮属性
+type MergedHTMLAttributes = Omit<
+  React.HTMLAttributes<HTMLElement> &
+    React.ButtonHTMLAttributes<HTMLElement> &
+    React.AnchorHTMLAttributes<HTMLElement>,
+  "type"
+>;
+
+// 按钮属性
+export interface ButtonProps extends BaseButtonProps, MergedHTMLAttributes {
+  href?: string;
+  htmlType?: "submit" | "button" | "reset";
+}
+
+function Button(props: ButtonProps) {
+  const {
+    type = "default",
+    disabled,
+    children,
+    className,
+    styles,
+    size,
+    onClick,
+    ...rest
+  } = props;
+
+  const handleClick = (
+    e: React.MouseEvent<HTMLButtonElement | HTMLAnchorElement, MouseEvent>
+  ) => {
+    console.log("点击按钮");
+    onClick?.(e);
+  };
+
   return (
     <button
       className={[
-        "yq-ui-button",
-        `yq-ui-button--${size}`,
+        "yq-ui-btn",
+        `yq-ui-btn--size-${size}`,
+        `yq-ui-btn--${type}`,
         className,
-        mode,
       ].join(" ")}
       style={styles}
-      type={type}
       disabled={disabled}
+      onClick={handleClick}
+      {...rest}
     >
-      {children ?? "按钮"}
+      {children ?? "按 钮"}
     </button>
   );
 }

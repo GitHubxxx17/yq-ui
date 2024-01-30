@@ -1,30 +1,107 @@
-.yq-ui-button {
+$yq-color-blue1: #1ea7fd;
+$yq-color-blue2: #50bcff;
+$yq-color-blue3: #0985d3;
+$yq-hover-bg: #eaeaea;
+$yq-active-bg: #bfbfbf;
+$yq-text-color: #282828;
+$yq-btn-bg-disabled: #d9d9d9;
+$yq-btn-text-disabled: rgba(0, 0, 0, 0.25);
+$yq-btn-border-disabled: rgba(0, 0, 0, 0.25);
+$yq-btn-height-lg: 40px;
+$yq-btn-height: 32px;
+$yq-btn-height-sm: 24px;
+$yq-btn-font-lg: 20px;
+$yq-btn-font: 16px;
+$yq-btn-font-sm: 12px;
+
+.yq-ui-btn {
   font-family: "Nunito Sans", "Helvetica Neue", Helvetica, Arial, sans-serif;
   font-weight: 700;
   border: 0;
-  border-radius: 3em;
+  border-radius: 1em;
   cursor: pointer;
   display: inline-block;
   line-height: 1;
-}
-.yq-ui-button--primary {
-  color: white;
-  background-color: #1ea7fd;
-}
-.yq-ui-button--secondary {
-  color: #333;
-  background-color: transparent;
-  box-shadow: rgba(0, 0, 0, 0.15) 0px 0px 0px 1px inset;
-}
-.yq-ui-button--small {
-  font-size: 12px;
-  padding: 10px 16px;
-}
-.yq-ui-button--medium {
-  font-size: 14px;
-  padding: 11px 20px;
-}
-.yq-ui-button--large {
-  font-size: 16px;
-  padding: 12px 24px;
+  height: 32px;
+  padding: 4px 15px;
+  transition: all 0.2s;
+  &:disabled {
+    background-color: $yq-btn-bg-disabled;
+    color: $yq-btn-text-disabled;
+    border-color: $yq-btn-border-disabled;
+    cursor: no-drop;
+  }
+
+  // 类型
+  &--primary {
+    color: white;
+    background-color: $yq-color-blue1;
+    &:not(:disabled):hover {
+      background-color: $yq-color-blue2;
+    }
+    &:not(:disabled):active {
+      background-color: $yq-color-blue3;
+    }
+  }
+  &--dashed {
+    color: $yq-text-color;
+    background-color: #fff;
+    border: 1px dashed $yq-text-color;
+    &:hover {
+      border-color: $yq-color-blue1;
+      color: $yq-color-blue1;
+    }
+    &:active {
+      border-color: $yq-color-blue3;
+      color: $yq-color-blue3;
+    }
+  }
+  &--link {
+    color: $yq-color-blue1;
+    background-color: #fff;
+    border: none;
+    &:hover {
+      color: $yq-color-blue2;
+    }
+    &:active {
+      color: $yq-color-blue3;
+    }
+  }
+  &--text {
+    color: $yq-text-color;
+    background-color: #fff;
+    &:hover {
+      background-color: $yq-hover-bg;
+    }
+    &:active {
+      background-color: $yq-active-bg;
+    }
+  }
+  &--default {
+    color: $yq-text-color;
+    background-color: #fff;
+    border: 1px solid $yq-text-color;
+    &:hover {
+      border-color: $yq-color-blue1;
+      color: $yq-color-blue1;
+    }
+    &:active {
+      border-color: $yq-color-blue3;
+      color: $yq-color-blue3;
+    }
+  }
+
+  // 尺寸
+  &--size-small {
+    font-size: $yq-btn-font-sm;
+    height: $yq-btn-height-sm;
+  }
+  &--size-default {
+    font-size: $yq-btn-font;
+    height: $yq-btn-height;
+  }
+  &--size-large {
+    font-size: $yq-btn-font-lg;
+    height: $yq-btn-height-lg;
+  }
 }
