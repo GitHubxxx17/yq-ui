@@ -1,3 +1,4 @@
+/** @type {import('ts-jest').JestConfigWithTsJest} */
 module.exports = {
   roots: ["./src"],
   setupFilesAfterEnv: ["./jest.setup.ts"],
