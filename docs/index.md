@@ -3,10 +3,10 @@ hero:
   title: library
   description: A react library developed with dumi
   actions:
-    - text: Hello
-      link: /
-    - text: World
-      link: /
+    - text: start
+      link: /components/button
+    - text: Github
+      link: https://github.com/GitHubxxx17/yq-ui
 features:
   - title: Hello
     emoji: 💎
@@ -19,4 +19,4 @@ features:
     description: Put ! description here
 ---
 
-yuqi-ui
+xxx-ui
