@@ -6,10 +6,14 @@ import React from "react";
 interface BaseButtonProps {
   type?: "primary" | "dashed" | "link" | "text" | "default";
   disabled?: boolean;
-  className?: string;
   children?: React.ReactNode;
   styles?: React.CSSProperties;
   size?: "small" | "default" | "large";
+  classNames?: string[];
+  danger?: boolean;
+  ghost?: boolean;
+  block?: boolean;
+  shape?: "default" | "circle" | "round";
 }
 
 // 原生按钮属性
@@ -23,6 +27,7 @@ type MergedHTMLAttributes = Omit<
 // 按钮属性
 export interface ButtonProps extends BaseButtonProps, MergedHTMLAttributes {
   href?: string;
+  target?: string;
   htmlType?: "submit" | "button" | "reset";
 }
 
@@ -33,8 +38,16 @@ function Button(props: ButtonProps) {
     children,
     className,
     styles,
-    size,
+    size = "default",
     onClick,
+    danger,
+    ghost,
+    block,
+    classNames = [],
+    href,
+    target,
+    htmlType,
+    shape = "default",
     ...rest
   } = props;
 
@@ -45,17 +58,61 @@ function Button(props: ButtonProps) {
     onClick?.(e);
   };
 
+  if (danger) {
+    classNames.push("yq-ui-btn--danger");
+  }
+
+  if (ghost) {
+    classNames.push("yq-ui-btn--ghost");
+  }
+
+  if (block) {
+    classNames.push("yq-ui-btn--block");
+  }
+
+  if (shape != "default") {
+    classNames.push(`yq-ui-btn--${shape}`);
+  }
+
+  if (size != "default") {
+    classNames.push(`yq-ui-btn--${size}`);
+  }
+
+  if (href) {
+    if (disabled) {
+      classNames.push("yq-ui-btn--disabled");
+    }
+    return (
+      <a
+        className={[
+          "yq-ui-btn",
+          `yq-ui-btn--${type}`,
+          className,
+          ...classNames,
+        ].join(" ")}
+        style={styles}
+        href={href}
+        target={target}
+        onClick={handleClick}
+        {...rest}
+      >
+        {children ?? "按 钮"}
+      </a>
+    );
+  }
+
   return (
     <button
       className={[
         "yq-ui-btn",
-        `yq-ui-btn--size-${size}`,
         `yq-ui-btn--${type}`,
         className,
+        ...classNames,
       ].join(" ")}
       style={styles}
       disabled={disabled}
       onClick={handleClick}
+      type={htmlType}
       {...rest}
     >
       {children ?? "按 钮"}

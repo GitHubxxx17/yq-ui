@@ -4,33 +4,40 @@ $yq-color-blue3: #0985d3;
 $yq-hover-bg: #eaeaea;
 $yq-active-bg: #bfbfbf;
 $yq-text-color: #282828;
+$yq-btn-default-border-color: #d9d9d9;
+// disabled
 $yq-btn-bg-disabled: #d9d9d9;
 $yq-btn-text-disabled: rgba(0, 0, 0, 0.25);
 $yq-btn-border-disabled: rgba(0, 0, 0, 0.25);
+//size
 $yq-btn-height-lg: 40px;
 $yq-btn-height: 32px;
 $yq-btn-height-sm: 24px;
 $yq-btn-font-lg: 20px;
 $yq-btn-font: 16px;
 $yq-btn-font-sm: 12px;
+//danger
+$yq-color-error: #ff4d4f;
+$yq-color-error-hover: #ff7875;
+$yq-color-error-active: #d9363e;
+$yq-color-error-bg: #fff2f0;
+$yq-color-error-bg-hover: #fff1f0;
+$yq-color-error-bg-active: #fbdcda;
+$yq-color-error-border-hover: #ffa39e;
 
 .yq-ui-btn {
   font-family: "Nunito Sans", "Helvetica Neue", Helvetica, Arial, sans-serif;
-  font-weight: 700;
+  font-weight: 400;
   border: 0;
-  border-radius: 1em;
+  border-radius: 6px;
   cursor: pointer;
   display: inline-block;
   line-height: 1;
-  height: 32px;
+  height: $yq-btn-height;
+  min-width: $yq-btn-height;
+  font-size: $yq-btn-font;
   padding: 4px 15px;
   transition: all 0.2s;
-  &:disabled {
-    background-color: $yq-btn-bg-disabled;
-    color: $yq-btn-text-disabled;
-    border-color: $yq-btn-border-disabled;
-    cursor: no-drop;
-  }
 
   // 类型
   &--primary {
@@ -46,12 +53,12 @@ $yq-btn-font-sm: 12px;
   &--dashed {
     color: $yq-text-color;
     background-color: #fff;
-    border: 1px dashed $yq-text-color;
-    &:hover {
+    border: 1px dashed $yq-btn-default-border-color;
+    &:not(:disabled):hover {
       border-color: $yq-color-blue1;
       color: $yq-color-blue1;
     }
-    &:active {
+    &:not(:disabled):active {
       border-color: $yq-color-blue3;
       color: $yq-color-blue3;
     }
@@ -60,48 +67,221 @@ $yq-btn-font-sm: 12px;
     color: $yq-color-blue1;
     background-color: #fff;
     border: none;
-    &:hover {
+    &:not(:disabled):hover {
       color: $yq-color-blue2;
     }
-    &:active {
+    &:not(:disabled):active {
       color: $yq-color-blue3;
     }
   }
   &--text {
     color: $yq-text-color;
     background-color: #fff;
-    &:hover {
+    &:not(:disabled):hover {
       background-color: $yq-hover-bg;
     }
-    &:active {
+    &:not(:disabled):active {
       background-color: $yq-active-bg;
     }
   }
   &--default {
     color: $yq-text-color;
     background-color: #fff;
-    border: 1px solid $yq-text-color;
-    &:hover {
+    border: 1px solid $yq-btn-default-border-color;
+    &:not(:disabled):hover {
       border-color: $yq-color-blue1;
       color: $yq-color-blue1;
     }
-    &:active {
+    &:not(:disabled):active {
       border-color: $yq-color-blue3;
       color: $yq-color-blue3;
     }
   }
 
   // 尺寸
-  &--size-small {
+  &--small {
     font-size: $yq-btn-font-sm;
     height: $yq-btn-height-sm;
+    min-width: $yq-btn-height-sm;
   }
-  &--size-default {
-    font-size: $yq-btn-font;
-    height: $yq-btn-height;
-  }
-  &--size-large {
+  &--large {
     font-size: $yq-btn-font-lg;
     height: $yq-btn-height-lg;
+    min-width: $yq-btn-height-lg;
   }
+
+  //危险
+  &--primary.yq-ui-btn--danger {
+    color: white;
+    background-color: $yq-color-error;
+    &:not(:disabled):hover {
+      background-color: $yq-color-error-hover;
+    }
+    &:not(:disabled):active {
+      background-color: $yq-color-error-active;
+    }
+  }
+  &--dashed.yq-ui-btn--danger {
+    color: $yq-color-error;
+    background-color: #fff;
+    border: 1px dashed $yq-color-error;
+    &:not(:disabled):hover {
+      border-color: $yq-color-error-border-hover;
+      color: $yq-color-error-hover;
+    }
+    &:not(:disabled):active {
+      border-color: $yq-color-error-active;
+      color: $yq-color-error-active;
+    }
+  }
+  &--link.yq-ui-btn--danger {
+    color: $yq-color-error;
+    background-color: #fff;
+    border: none;
+    &:not(:disabled):hover {
+      color: $yq-color-error-hover;
+    }
+    &:not(:disabled):active {
+      color: $yq-color-error-active;
+    }
+  }
+  &--text.yq-ui-btn--danger {
+    color: $yq-color-error;
+    background-color: #fff;
+    &:not(:disabled):hover {
+      color: $yq-color-error-hover;
+      background-color: $yq-color-error-bg-hover;
+    }
+    &:not(:disabled):active {
+      background-color: $yq-color-error-bg-active;
+    }
+  }
+  &--default.yq-ui-btn--danger {
+    color: $yq-color-error;
+    background-color: #fff;
+    border: 1px solid $yq-color-error;
+    &:not(:disabled):hover {
+      border-color: $yq-color-error-border-hover;
+      color: $yq-color-error-hover;
+    }
+    &:not(:disabled):active {
+      border-color: $yq-color-error-active;
+      color: $yq-color-error-active;
+    }
+  }
+
+  //幽灵按钮
+  &--primary.yq-ui-btn--ghost,
+  &--dashed.yq-ui-btn--ghost,
+  &--link.yq-ui-btn--ghost,
+  &--text.yq-ui-btn--ghost,
+  &--default.yq-ui-btn--ghost {
+    background-color: transparent;
+  }
+  &--primary.yq-ui-btn--ghost,
+  &--dashed.yq-ui-btn--ghost,
+  &--default.yq-ui-btn--ghost {
+    color: $yq-color-blue1;
+    border: 1px solid $yq-color-blue1;
+    &:not(:disabled):hover {
+      background-color: transparent;
+      color: $yq-color-blue2;
+      border-color: $yq-color-blue2;
+    }
+    &:not(:disabled):active {
+      background-color: transparent;
+      color: $yq-color-blue3;
+      border-color: $yq-color-blue3;
+    }
+  }
+  &--primary.yq-ui-btn--ghost.yq-ui-btn--danger {
+    color: $yq-color-error;
+    border: 1px solid $yq-color-error;
+    &:not(:disabled):hover {
+      color: $yq-color-error-hover;
+      border-color: $yq-color-error-hover;
+    }
+    &:not(:disabled):active {
+      color: $yq-color-error-active;
+      border-color: $yq-color-error-active;
+    }
+  }
+  &--dashed.yq-ui-btn--ghost {
+    color: #fff;
+    border: 1px dashed #fff;
+  }
+  &--dashed.yq-ui-btn--ghost.yq-ui-btn--danger {
+    color: $yq-color-error;
+    border: 1px dashed $yq-color-error;
+    &:not(:disabled):hover {
+      border-color: $yq-color-error-border-hover;
+      color: $yq-color-error-hover;
+    }
+    &:not(:disabled):active {
+      border-color: $yq-color-error-active;
+      color: $yq-color-error-active;
+    }
+  }
+  &--default.yq-ui-btn--ghost {
+    color: #fff;
+    border: 1px solid #fff;
+  }
+  &--default.yq-ui-btn--ghost.yq-ui-btn--danger {
+    color: $yq-color-error;
+    border: 1px solid $yq-color-error;
+    &:not(:disabled):hover {
+      border-color: $yq-color-error-border-hover;
+      color: $yq-color-error-hover;
+    }
+    &:not(:disabled):active {
+      border-color: $yq-color-error-active;
+      color: $yq-color-error-active;
+    }
+  }
+
+  //按钮失效
+  &:disabled,
+  &--disabled {
+    background-color: $yq-btn-bg-disabled;
+    color: $yq-btn-text-disabled !important;
+    border-color: $yq-btn-border-disabled !important;
+    cursor: no-drop;
+    pointer-events: none;
+  }
+  &--primary:disabled,
+  &--primary.yq-ui-btn--disabled {
+    border: 1px solid $yq-btn-border-disabled;
+  }
+  &--text:disabled,
+  &--link:disabled,
+  &--text.yq-ui-btn--disabled,
+  &--link.yq-ui-btn--disabled {
+    border-color: none;
+    background-color: #fff;
+  }
+
+  // block按钮
+  &--block {
+    width: 100%;
+  }
+
+  // 按钮形状
+  &--circle {
+    border-radius: 50%;
+    padding: 4px 0;
+  }
+  &--round {
+    border-radius: $yq-btn-height;
+  }
+  &--round.yq-ui-btn--small {
+    border-radius: $yq-btn-height-sm;
+  }
+  &--round.yq-ui-btn--large {
+    border-radius: $yq-btn-height-lg;
+  }
+}
+
+a.yq-ui-btn {
+  text-decoration: none;
+  display: initial;
 }
