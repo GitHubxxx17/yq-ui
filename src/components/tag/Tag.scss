@@ -1,0 +1,45 @@
+@import "../__common__/color";
+
+$yq-tag-default-bg: #fafafa;
+$yq-tag-default-color: rgba(0, 0, 0, 0.88);
+$yq-color-border: #d9d9d9;
+$yq-btn-font-lg: 20px;
+$yq-btn-font: 16px;
+$yq-btn-font-sm: 12px;
+
+$colors: (
+  color1: blue,
+  color2: red,
+  color3: green,
+  color4: purple,
+  color5: cyan,
+  color6: magenta,
+  color7: pink,
+  color8: orange,
+  color9: yellow,
+  color10: volcano,
+  color11: geekblue,
+  color12: gold,
+  color13: lime,
+);
+
+.yq-tag {
+  font-family: "Nunito Sans", "Helvetica Neue", Helvetica, Arial, sans-serif;
+  font-weight: 400;
+  display: inline-block;
+  background-color: $yq-tag-default-bg;
+  color: $yq-tag-default-color;
+  border: 1px solid $yq-color-border;
+  font-size: $yq-btn-font-sm;
+  border-radius: 4px;
+  padding: 0 7px;
+  line-height: 1.8;
+  box-sizing: border-box;
+}
+@each $key, $color in $colors {
+  &-#{$color} {
+    color: #{"$"}yq--#{$color}-7;
+    background-color: #{"$"}yq--#{$color}-1;
+    border-color: #{"$"}yq--#{$color}-3;
+  }
+}
