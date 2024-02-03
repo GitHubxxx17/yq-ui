@@ -5,3 +5,4 @@ es
 .dumi/tmp-production
 .dumi/preset/components-changelog*
 .dumi/preset/misc-changelog.json
+docs-dist

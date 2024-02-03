@@ -26,7 +26,8 @@
     "doctor": "father doctor",
     "lint:css": "stylelint \"{src,test}/**/*.{css,less}\"",
     "lint:es": "eslint \"{src,test}/**/*.{js,jsx,ts,tsx}\"",
-    "prepublishOnly": "father doctor && npm run build"
+    "prepublishOnly": "father doctor && npm run build",
+    "deploy": "gh-pages -d docs-dist"
   },
   "keywords": [],
   "author": "XXX17",
@@ -86,6 +87,7 @@
     "eslint-plugin-storybook": "^0.6.15",
     "eslint-plugin-unused-imports": "^3.0.0",
     "father": "^4.4.0",
+    "gh-pages": "^6.1.1",
     "husky": "^9.0.6",
     "identity-obj-proxy": "^3.0.0",
     "jest": "^29.7.0",
