@@ -29,6 +29,10 @@ group:
 预设五种状态颜色，可以通过设置 color 为 `success`、 `info`、`error`、`default`、`warning` 来代表不同的状态。
 <code src="./demo/status.tsx">预设标签</code>
 
+当需要在 `Tag` 内嵌入 `Icon` 时，可以设置 `icon` 属性，或者直接在 Tag 内使用 `Icon` 组件。
+如果想控制 `Icon` 具体的位置，只能直接使用 `Icon` 组件，而非 `icon` 属性。
+<code src="./demo/icon.tsx">图标标签</code>
+
 设置`bordered`的值为`false`来隐藏边框
 <code src="./demo/bordered.tsx">无边框模式</code>
 

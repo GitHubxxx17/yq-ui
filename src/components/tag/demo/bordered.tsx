@@ -1,6 +1,6 @@
 import { Tag } from "@/index";
 import React from "react";
-import { colors, status } from "./list";
+import { colors, status } from "../list";
 
 const App: React.FC = () => {
   return (

@@ -1,7 +1,8 @@
 import { defineConfig } from "dumi";
 
 export default defineConfig({
-  base: "yq-ui",
+  base: "/yq-ui",
+  publicPath: "/yq-ui/",
   outputPath: "docs-dist",
   resolve: {
     atomDirs: [{ type: "component", dir: "src/components" }],

@@ -1,6 +1,9 @@
-import React from "react";
+import { isBoolean } from "@/utils";
+import { CloseOutlined } from "@ant-design/icons";
+import React, { useState } from "react";
 import CheckableTag from "./CheckableTag";
 import "./Tag.scss";
+import { colors, status } from "./list";
 // 标签基础样式
 export interface TagProps extends React.HTMLAttributes<HTMLSpanElement> {
   children?: React.ReactNode;
@@ -8,6 +11,9 @@ export interface TagProps extends React.HTMLAttributes<HTMLSpanElement> {
   classNames?: string[];
   styles?: React.CSSProperties;
   bordered?: boolean;
+  closeIcon?: boolean | React.ReactNode;
+  onClose?: (e: React.MouseEvent<HTMLElement>) => void;
+  icon?: React.ReactNode;
 }
 
 export interface TagType
@@ -27,19 +33,56 @@ const InternalTag: React.ForwardRefRenderFunction<HTMLSpanElement, TagProps> = (
     classNames = [],
     styles,
     bordered = true,
+    closeIcon,
+    onClose,
+    icon,
     ...rest
   } = props;
-  if (color != "default") classNames.push(`yq-tag-${color}`);
+
+  let patchStyle = styles;
+
+  if (color && [...colors, ...status].includes(color)) {
+    if (color != "default") classNames.push(`yq-tag-${color}`);
+  } else if (color) {
+    patchStyle = {
+      ...patchStyle,
+      backgroundColor: color,
+      borderColor: color,
+      color: "#fff",
+    };
+  }
+
   if (!bordered) classNames.push(`yq-tag-none-bordered`);
+
+  const [close, setClose] = useState(false);
+
+  const handleClick = (e: React.MouseEvent<HTMLElement>) => {
+    e.stopPropagation();
+    onClose?.(e);
+    //如果设置阻止默认事件
+    if (e.defaultPrevented) {
+      return;
+    }
+    setClose(true);
+  };
+
   return (
-    <span
-      ref={ref}
-      className={["yq-tag", ...classNames].join(" ")}
-      style={styles}
-      {...rest}
-    >
-      {children ?? "标 签"}
-    </span>
+    !close && (
+      <span
+        ref={ref}
+        className={["yq-tag", ...classNames].join(" ")}
+        style={patchStyle}
+        {...rest}
+      >
+        {icon && <span className="yq-tag-icon">{icon}</span>}
+        {children}
+        {closeIcon && (
+          <span className="yq-tag-closeIcon" onClick={handleClick}>
+            {isBoolean(closeIcon) ? <CloseOutlined /> : closeIcon}
+          </span>
+        )}
+      </span>
+    )
   );
 };
 const Tag = React.forwardRef<HTMLSpanElement, TagProps>(InternalTag) as TagType;

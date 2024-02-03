@@ -2,6 +2,7 @@
 
 $yq-tag-default-bg: #fafafa;
 $yq-tag-default-color: rgba(0, 0, 0, 0.88);
+$yq-tag-default-color-hover: rgba(0, 0, 0, 0.95);
 $yq-color-border: #d9d9d9;
 $yq-btn-font-lg: 20px;
 $yq-btn-font: 16px;
@@ -49,6 +50,20 @@ $yq-btn-font-sm: 12px;
     &:hover {
       background-color: $yq-blue-5;
       color: #fff;
+    }
+  }
+
+  &-icon {
+    margin-right: 4px;
+  }
+
+  &-closeIcon {
+    margin-left: 4px;
+    color: $yq-color-text-tertiary;
+    cursor: pointer;
+    transition: all 0.2s;
+    &:hover {
+      color: $yq-tag-default-color-hover;
     }
   }
 }
