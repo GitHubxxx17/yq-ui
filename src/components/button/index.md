@@ -33,8 +33,14 @@ group:
 ## 代码演示
 
 按钮分为主要按钮、默认按钮、虚线按钮、链接按钮和文本按钮五种。
-
 <code src="./demo/base.tsx">基础用法</code>
+
+当需要在 `Button` 内嵌入 `Icon` 时，可以设置 `icon` 属性，或者直接在 Button 内使用 `Icon` 组件。
+如果想控制 `Icon` 具体的位置，只能直接使用 `Icon` 组件，而非 `icon` 属性。
+<code src="./demo/icon.tsx">图标按钮</code>
+
+添加 `loading` 属性即可让按钮处于加载状态，最后三个按钮演示点击后进入加载状态。
+<code src="./demo/loading.tsx">加载中状态</code>
 
 按钮有大、中、小三种尺寸。
 通过设置`size`为 `large`、`small` 分别把按钮设为大、小尺寸。若不设置 `size`，则尺寸为中。
@@ -70,6 +76,7 @@ group:
 | danger     | boolean                                                | `false`   | false | 设置危险按钮                                          |
 | disabled   | boolean                                                | `false`   | false | 设置按钮失效状态                                      |
 | ghost      | boolean                                                | `false`   | false | 幽灵属性，使按钮背景透明                              |
+| icon       | ReactNode                                              | -         | false | 设置按钮的图标组件                                    |
 | loading    | boolean \| { delay: number }                           | `false`   | false | 设置按钮载入状态                                      |
 | block      | boolean                                                | `false`   | false | 将按钮宽度调整为其父宽度的选项                        |
 | href       | string                                                 | -         | false | 点击跳转的地址，指定此属性 button 的行为和 a 链接一致 |

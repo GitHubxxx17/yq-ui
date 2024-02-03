@@ -7,22 +7,6 @@ $yq-btn-font-lg: 20px;
 $yq-btn-font: 16px;
 $yq-btn-font-sm: 12px;
 
-$colors: (
-  color1: blue,
-  color2: red,
-  color3: green,
-  color4: purple,
-  color5: cyan,
-  color6: magenta,
-  color7: pink,
-  color8: orange,
-  color9: yellow,
-  color10: volcano,
-  color11: geekblue,
-  color12: gold,
-  color13: lime,
-);
-
 .yq-tag {
   font-family: "Nunito Sans", "Helvetica Neue", Helvetica, Arial, sans-serif;
   font-weight: 400;
@@ -35,11 +19,45 @@ $colors: (
   padding: 0 7px;
   line-height: 1.8;
   box-sizing: border-box;
+  transition: all 0.2s;
+
+  &-none-bordered,
+  &-checkable {
+    border: none;
+    padding: 1px 8px;
+  }
+
+  a {
+    text-decoration: none;
+    width: 100%;
+    height: 100%;
+    color: inherit;
+  }
+
+  &-checkable {
+    cursor: pointer;
+    background-color: #fff;
+    &:hover {
+      color: $yq-blue-5;
+      background-color: $yq-color-fill-secondary;
+    }
+  }
+
+  &-checked {
+    background-color: $yq-blue-6;
+    color: #fff;
+    &:hover {
+      background-color: $yq-blue-5;
+      color: #fff;
+    }
+  }
 }
+
+//遍历颜色列表
 @each $key, $color in $colors {
-  &-#{$color} {
-    color: #{"$"}yq--#{$color}-7;
-    background-color: #{"$"}yq--#{$color}-1;
-    border-color: #{"$"}yq--#{$color}-3;
+  .yq-tag-#{$color} {
+    color: map-get($colorList, #{$color}-7);
+    background-color: map-get($colorList, #{$color}-1);
+    border-color: map-get($colorList, #{$color}-3);
   }
 }

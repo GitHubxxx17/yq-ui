@@ -39,6 +39,18 @@ $yq-color-error-border-hover: #ffa39e;
   padding: 4px 15px;
   transition: all 0.2s;
 
+  &-only {
+    padding: 4px 0;
+  }
+
+  &:not(.yq-ui-btn-only) .yq-ui-btn-icon {
+    margin-right: 8px;
+  }
+
+  &-loading {
+    opacity: 0.65;
+  }
+
   // 类型
   &--primary {
     color: white;
