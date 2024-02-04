@@ -1,4 +1,4 @@
-import { isNumber, isObject } from "@/utils/index";
+import { isNumber, isObject } from "../../utils/index";
 import "./button.scss";
 
 import { LoadingOutlined } from "@ant-design/icons";
@@ -111,33 +111,15 @@ function Button(props: ButtonProps) {
     onClick?.(e);
   };
 
-  if (danger) {
-    classNames.push("yq-ui-btn--danger");
-  }
-
-  if (ghost) {
-    classNames.push("yq-ui-btn--ghost");
-  }
-
-  if (block) {
-    classNames.push("yq-ui-btn--block");
-  }
-
-  if (shape != "default") {
-    classNames.push(`yq-ui-btn--${shape}`);
-  }
-
-  if (size != "default") {
-    classNames.push(`yq-ui-btn--${size}`);
-  }
-
-  if (!children) {
-    classNames.push("yq-ui-btn-only");
-  }
-
-  if (innerLoading) {
-    classNames.push("yq-ui-btn-loading");
-  }
+  let innerClassNames = [
+    danger ? "yq-ui-btn--danger" : "",
+    ghost ? "yq-ui-btn--ghost" : "",
+    block ? "yq-ui-btn--block" : "",
+    shape !== "default" ? `yq-ui-btn--${shape}` : "",
+    size !== "default" ? `yq-ui-btn--${size}` : "",
+    !children ? "yq-ui-btn-only" : "",
+    innerLoading ? "yq-ui-btn-loading" : "",
+  ].filter((className) => className !== "");
 
   if (href) {
     if (disabled) {
@@ -150,6 +132,7 @@ function Button(props: ButtonProps) {
           `yq-ui-btn--${type}`,
           className,
           ...classNames,
+          ...innerClassNames,
         ].join(" ")}
         style={styles}
         href={href}
@@ -157,7 +140,12 @@ function Button(props: ButtonProps) {
         onClick={handleClick}
         {...rest}
       >
-        {icon && <span className={"yq-ui-btn-icon"}>{icon}</span>}
+        {!loading && icon && <span className={"yq-ui-btn-icon"}>{icon}</span>}
+        {loading && (
+          <span className={"yq-ui-btn-icon"}>
+            <LoadingOutlined />
+          </span>
+        )}
         <span>{children}</span>
       </a>
     );
@@ -170,6 +158,7 @@ function Button(props: ButtonProps) {
         `yq-ui-btn--${type}`,
         className,
         ...classNames,
+        ...innerClassNames,
       ].join(" ")}
       style={styles}
       disabled={disabled}

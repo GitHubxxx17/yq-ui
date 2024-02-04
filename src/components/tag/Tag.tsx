@@ -1,6 +1,6 @@
-import { isBoolean } from "@/utils";
 import { CloseOutlined } from "@ant-design/icons";
 import React, { useState } from "react";
+import { isBoolean } from "../../utils";
 import CheckableTag from "./CheckableTag";
 import "./Tag.scss";
 import { colors, status } from "./list";
