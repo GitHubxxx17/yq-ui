@@ -18,6 +18,7 @@ group:
 ## 代码演示
 
 <code src="./demo/base.tsx">基础用法</code>
+<code src="./demo/placement.tsx">基础用法</code>
 
 ## API
 

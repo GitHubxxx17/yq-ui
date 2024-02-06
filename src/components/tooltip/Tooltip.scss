@@ -8,10 +8,8 @@
   box-shadow: $yq-box-shadow;
   max-width: 250px;
   display: none;
-
-  &-visible {
-    display: block;
-  }
+  transform-origin: bottom center;
+  transform: scale(1);
 
   &-arrow {
     z-index: 5;

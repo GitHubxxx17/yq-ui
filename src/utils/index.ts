@@ -17,3 +17,5 @@ export const { isValidElement } = React;
 export function isFragment(child: any): boolean {
   return child && isValidElement(child) && child.type === React.Fragment;
 }
+
+export { Debounce, DebounceState } from "./helper";
