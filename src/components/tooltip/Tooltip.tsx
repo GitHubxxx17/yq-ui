@@ -1,22 +1,17 @@
 import React, { useEffect, useRef, useState } from "react";
 import ReactDOM from "react-dom";
 import { isFragment, isValidElement } from "../../utils";
+import { colors } from "../tag/list";
 import "./Tooltip.scss";
-
-// 位置类型声明
-export type TooltipPlacement =
-  | "top"
-  | "left"
-  | "right"
-  | "bottom"
-  | "topLeft"
-  | "topRight"
-  | "bottomLeft"
-  | "bottomRight"
-  | "leftTop"
-  | "leftBottom"
-  | "rightTop"
-  | "rightBottom";
+import {
+  TooltipPlacement,
+  animateTime,
+  appearAnimation,
+  disappearAnimation,
+  getPos,
+  trigger,
+  triggerHandler,
+} from "./TooltipHelper";
 
 // 按钮基础属性
 export interface TooltipProps
@@ -26,22 +21,14 @@ export interface TooltipProps
   mouseEnterDelay?: number;
   mouseLeaveDelay?: number;
   placement?: TooltipPlacement;
+  color?: string;
+  arrow?: boolean;
+  defaultOpen?: boolean;
+  trigger?: trigger;
+  open?: boolean;
+  zIndex?: number;
+  onOpenChange?: (open: boolean) => void;
 }
-
-// 动画执行时间
-const animateTime = 100;
-
-// 淡入动画效果
-const appearAnimation = [
-  { opacity: 0, transform: "scale(0.7)" },
-  { opacity: 1, transform: "scale(1)" },
-];
-// 淡出动画效果
-const disappearAnimation = [
-  { opacity: 1, transform: "scale(1)" },
-  { opacity: 0, transform: "scale(0.7)" },
-];
-
 //处理传入的子组件
 const handleChild = (children: React.ReactNode) => {
   return isValidElement(children) && !isFragment(children) ? (
@@ -51,36 +38,6 @@ const handleChild = (children: React.ReactNode) => {
   );
 };
 
-const getPos = (
-  place: TooltipPlacement,
-  trigger: HTMLDivElement,
-  tooltip: HTMLDivElement
-) => {
-  const {} = trigger.getBoundingClientRect();
-};
-
-function getElementTop(element: any) {
-  var actualTop = element.offsetTop;
-  var current = element.offsetParent;
-
-  while (current !== null) {
-    actualTop += current.offsetTop;
-    current = current.offsetParent;
-  }
-  return actualTop;
-}
-
-function getElementLeft(element: any) {
-  var actualLeft = element.offsetLeft;
-  var current = element.offsetParent;
-
-  while (current !== null) {
-    actualLeft += current.offsetLeft;
-    current = current.offsetParent;
-  }
-  return actualLeft;
-}
-
 function Tooltip(props: TooltipProps) {
   const {
     title,
@@ -88,97 +45,108 @@ function Tooltip(props: TooltipProps) {
     mouseEnterDelay = 0.1,
     mouseLeaveDelay = 0.1,
     placement = "top",
+    color,
+    arrow = true,
+    defaultOpen = false,
+    trigger = "hover",
+    open = false,
+    zIndex = 100,
+    onOpenChange,
     className,
     style,
     ...rest
   } = props;
   // 合并样式
-  let [patchStyle, setPatchStyle] = useState(style);
+  let patchStyle = { ...style, zIndex };
   // 显示隐藏
-  const [visible, setVisible] = useState(false);
+  const [visible, setVisible] = useState(open);
   // 类名数组
   let classNames: string[] = [];
   // 触发组件ref
   const triggerRef = useRef<HTMLDivElement>();
   // 文字提示ref
   const tooltipRef = useRef<HTMLDivElement>(null);
+  // 文字提示箭头ref
+  const arrowRef = useRef<HTMLDivElement>(null);
   // 文字提示动画实例
   const animate = useRef<Animation>();
-  //
+  // 首次鼠标移入
   const [first, setFirst] = useState(true);
+  // 背景颜色
+  let bgColor = "";
+
+  // 手动设置显示隐藏
+  useEffect(() => {
+    setVisible(open);
+  }, [open]);
 
   // 触发显示和隐藏
   useEffect(() => {
-    const dom = tooltipRef.current as HTMLDivElement;
-    if (!triggerRef.current || !dom) return;
+    const tooltip = tooltipRef.current as HTMLDivElement;
+    if (!triggerRef.current || !tooltip) return;
     //取消上一次的动画
     if (animate.current) {
       animate.current.cancel();
     }
+    //如果有回调函数
+    onOpenChange && onOpenChange(visible);
     if (visible) {
       //淡入
-      const { x } = triggerRef.current.getBoundingClientRect();
-      dom.style.left = `${x}px`;
-      dom.style.display = "block";
-      animate.current = dom.animate(appearAnimation, animateTime);
+      tooltip.style.display = "block";
+      setTimeout(() => {
+        const trigger = triggerRef.current as HTMLDivElement;
+        const arrow = arrowRef.current as HTMLDivElement;
+        getPos(placement, trigger, tooltip, arrow);
+        animate.current = tooltip.animate(appearAnimation, animateTime);
+      });
     } else {
       //淡出
-      animate.current = dom.animate(disappearAnimation, animateTime);
+      animate.current = tooltip.animate(disappearAnimation, animateTime);
       animate.current.onfinish = () => {
-        dom.style.display = "none";
+        tooltip.style.display = "none";
       };
     }
   }, [visible]);
+
+  //设置颜色
+  if (color) {
+    if (colors.includes(color)) {
+      classNames.push(`yq-tooltip-${color}`);
+    } else {
+      bgColor = color;
+    }
+  }
 
   if (children) {
     // 如果传入的children是纯文本将其放入span中
     const child = handleChild(children);
 
+    // 如果title为空则禁用
+    if (!title) {
+      triggerRef.current = undefined;
+      return child;
+    }
+
+    // 处理显示
+    const handleVisible = (e: React.MouseEvent<HTMLDivElement>) => {
+      setVisible(!visible);
+      if (!triggerRef.current) {
+        setFirst(false);
+        // debugger;
+        triggerRef.current = e.target as HTMLDivElement;
+      }
+    };
+
+    // 处理隐藏
+    const handleHidden = () => {
+      setVisible(false);
+    };
+
     // 将child改造成触发器
-    const Trigger = React.cloneElement(child, {
-      onPointerEnter: (e: React.MouseEvent<HTMLDivElement>) => {
-        setVisible(true);
-        if (!triggerRef.current) {
-          setFirst(false);
-
-          setTimeout(() => {
-            //初始化dom节点的位置
-            triggerRef.current = e.target as HTMLDivElement;
-            const {
-              top,
-              left,
-              width: tgWidth,
-            } = triggerRef.current.getBoundingClientRect();
-            let offsetTop = triggerRef.current.offsetTop;
-            let offsetLeft = triggerRef.current.offsetLeft;
-            console.log(
-              top,
-              left,
-              offsetTop,
-              offsetLeft,
-              getElementTop(triggerRef.current),
-              getElementLeft(triggerRef.current)
-            );
-
-            const dom = tooltipRef.current as HTMLDivElement;
-            if (!dom) return;
-            // 让dom节点渲染到页面并获取高度和宽度
-            dom.style.transform = "scale(1)";
-            dom.style.display = "block";
-            let scrollTop = document.documentElement.scrollTop;
-            let scrollLeft = document.documentElement.scrollLeft;
-            const { height, width } = dom.getBoundingClientRect();
-
-            dom.style.transform = "";
-            dom.style.top = `${offsetTop - height - 10}px`;
-            dom.style.left = `${left + (tgWidth - width) / 2}px`;
-          });
-        }
-      },
-      onPointerLeave: () => {
-        setVisible(false);
-      },
-    });
+    const Trigger = React.cloneElement(
+      child,
+      triggerHandler(trigger, handleVisible, handleHidden)
+    );
 
     return (
       <>
@@ -190,8 +158,19 @@ function Tooltip(props: TooltipProps) {
               style={patchStyle}
               {...rest}
             >
-              <div className="yq-tooltip-arrow"></div>
-              <div className="yq-tooltip-conent">{title}</div>
+              {arrow && (
+                <div
+                  ref={arrowRef}
+                  className="yq-tooltip-arrow"
+                  style={{ backgroundColor: bgColor }}
+                ></div>
+              )}
+              <div
+                className="yq-tooltip-content"
+                style={{ backgroundColor: bgColor }}
+              >
+                {title}
+              </div>
             </div>,
             document.body
           )}

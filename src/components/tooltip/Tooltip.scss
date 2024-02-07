@@ -3,10 +3,12 @@
 
 .yq-tooltip {
   position: absolute;
-  background-color: #000;
   border-radius: $yq-border-radius-lg;
   box-shadow: $yq-box-shadow;
   max-width: 250px;
+  min-width: 32px;
+  min-height: 32px;
+  user-select: none;
   display: none;
   transform-origin: bottom center;
   transform: scale(1);
@@ -16,22 +18,38 @@
     width: 10px;
     height: 10px;
     position: absolute;
-    bottom: 0;
-    left: 50%;
-    transform: translate(-50%, 50%) rotate(45deg);
+    top: 0;
+    left: 0;
+    transform: rotate(45deg);
     background-color: #000;
     box-shadow: $yq-box-shadow;
     border-radius: 2px;
   }
 
-  &-conent {
+  &-content {
     position: relative;
     z-index: 10;
     background-color: #000;
     border-radius: $yq-border-radius-lg;
     padding: 6px 8px;
+    min-height: 32px;
+    min-width: 32px;
+    box-sizing: border-box;
     color: #fff;
     font-size: $yq-font-size;
     line-height: $yq-line-height;
+  }
+}
+
+//遍历颜色列表
+@each $key, $color in $colors {
+  .yq-tooltip-#{$color} {
+    .yq-tooltip-content {
+      background-color: map-get($colorList, #{$color}-6);
+    }
+
+    .yq-tooltip-arrow {
+      background-color: map-get($colorList, #{$color}-6);
+    }
   }
 }
