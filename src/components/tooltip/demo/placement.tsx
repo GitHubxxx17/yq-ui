@@ -6,7 +6,7 @@ const text = <span>prompt text</span>;
 const buttonWidth = 80;
 
 const App: React.FC = () => (
-  <div className="demo">
+  <div className="demo" style={{ overflow: "scroll" }}>
     <div style={{ marginInlineStart: buttonWidth, whiteSpace: "nowrap" }}>
       <Tooltip placement="topLeft" title={text}>
         <Button style={{ minWidth: "80px", margin: "0 8px 8px 0" }}>TL</Button>

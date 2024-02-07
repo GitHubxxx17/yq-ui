@@ -93,12 +93,10 @@ function Tooltip(props: TooltipProps) {
     if (visible) {
       //淡入
       tooltip.style.display = "block";
-      setTimeout(() => {
-        const trigger = triggerRef.current as HTMLDivElement;
-        const arrow = arrowRef.current as HTMLDivElement;
-        getPos(placement, trigger, tooltip, arrow);
-        animate.current = tooltip.animate(appearAnimation, animateTime);
-      });
+      const trigger = triggerRef.current as HTMLDivElement;
+      const arrow = arrowRef.current as HTMLDivElement;
+      getPos(placement, trigger, tooltip, arrow);
+      animate.current = tooltip.animate(appearAnimation, animateTime);
     } else {
       //淡出
       animate.current = tooltip.animate(disappearAnimation, animateTime);
@@ -132,8 +130,7 @@ function Tooltip(props: TooltipProps) {
       setVisible(!visible);
       if (!triggerRef.current) {
         setFirst(false);
-        // debugger;
-        triggerRef.current = e.target as HTMLDivElement;
+        triggerRef.current = e.currentTarget as HTMLDivElement;
       }
     };
 
