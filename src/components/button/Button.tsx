@@ -59,74 +59,101 @@ const handleLoadingProps = (
   };
 };
 
-function Button(props: ButtonProps) {
-  const {
-    type = "default",
-    disabled,
-    children,
-    className,
-    styles,
-    size = "default",
-    onClick,
-    danger,
-    ghost,
-    block,
-    classNames = [],
-    href,
-    target,
-    htmlType,
-    shape = "default",
-    icon,
-    loading,
-    ...rest
-  } = props;
-  //内部加载
-  const [innerLoading, setInnerLoading] = useState(false);
-  const loadingProps = handleLoadingProps(loading);
+const Button = React.forwardRef<HTMLButtonElement, ButtonProps>(
+  (props: ButtonProps, ref) => {
+    const {
+      type = "default",
+      disabled,
+      children,
+      className,
+      styles,
+      size = "default",
+      onClick,
+      danger,
+      ghost,
+      block,
+      classNames = [],
+      href,
+      target,
+      htmlType,
+      shape = "default",
+      icon,
+      loading,
+      ...rest
+    } = props;
+    //内部加载
+    const [innerLoading, setInnerLoading] = useState(false);
+    const loadingProps = handleLoadingProps(loading);
 
-  //延迟加载
-  useEffect(() => {
-    let timer: ReturnType<typeof setTimeout> | null = null;
-    if (loadingProps.delay > 0) {
-      setTimeout(() => {
-        timer = null;
-        setInnerLoading(false);
-      }, loadingProps.delay);
-    } else {
-      setInnerLoading(loadingProps.loading);
-    }
-    return () => {
-      timer && clearTimeout(timer);
+    //延迟加载
+    useEffect(() => {
+      let timer: ReturnType<typeof setTimeout> | null = null;
+      if (loadingProps.delay > 0) {
+        setTimeout(() => {
+          timer = null;
+          setInnerLoading(false);
+        }, loadingProps.delay);
+      } else {
+        setInnerLoading(loadingProps.loading);
+      }
+      return () => {
+        timer && clearTimeout(timer);
+      };
+    }, [loadingProps]);
+
+    const handleClick = (
+      e: React.MouseEvent<HTMLButtonElement | HTMLAnchorElement, MouseEvent>
+    ) => {
+      //加载过程取消点击事件
+      if (innerLoading) {
+        e.preventDefault();
+        return;
+      }
+      onClick?.(e);
     };
-  }, [loadingProps]);
 
-  const handleClick = (
-    e: React.MouseEvent<HTMLButtonElement | HTMLAnchorElement, MouseEvent>
-  ) => {
-    //加载过程取消点击事件
-    if (innerLoading) {
-      e.preventDefault();
-      return;
+    let innerClassNames = [
+      danger ? "yq-ui-btn--danger" : "",
+      ghost ? "yq-ui-btn--ghost" : "",
+      block ? "yq-ui-btn--block" : "",
+      shape !== "default" ? `yq-ui-btn--${shape}` : "",
+      size !== "default" ? `yq-ui-btn--${size}` : "",
+      !children ? "yq-ui-btn-only" : "",
+      innerLoading ? "yq-ui-btn-loading" : "",
+    ].filter((className) => className !== "");
+
+    if (href) {
+      if (disabled) {
+        classNames.push("yq-ui-btn--disabled");
+      }
+      return (
+        <a
+          className={[
+            "yq-ui-btn",
+            `yq-ui-btn--${type}`,
+            className,
+            ...classNames,
+            ...innerClassNames,
+          ].join(" ")}
+          style={styles}
+          href={href}
+          target={target}
+          onClick={handleClick}
+          {...rest}
+        >
+          {!loading && icon && <span className={"yq-ui-btn-icon"}>{icon}</span>}
+          {loading && (
+            <span className={"yq-ui-btn-icon"}>
+              <LoadingOutlined />
+            </span>
+          )}
+          <span>{children}</span>
+        </a>
+      );
     }
-    onClick?.(e);
-  };
 
-  let innerClassNames = [
-    danger ? "yq-ui-btn--danger" : "",
-    ghost ? "yq-ui-btn--ghost" : "",
-    block ? "yq-ui-btn--block" : "",
-    shape !== "default" ? `yq-ui-btn--${shape}` : "",
-    size !== "default" ? `yq-ui-btn--${size}` : "",
-    !children ? "yq-ui-btn-only" : "",
-    innerLoading ? "yq-ui-btn-loading" : "",
-  ].filter((className) => className !== "");
-
-  if (href) {
-    if (disabled) {
-      classNames.push("yq-ui-btn--disabled");
-    }
     return (
-      <a
+      <button
         className={[
           "yq-ui-btn",
           `yq-ui-btn--${type}`,
@@ -135,9 +162,10 @@ function Button(props: ButtonProps) {
           ...innerClassNames,
         ].join(" ")}
         style={styles}
-        href={href}
-        target={target}
+        ref={ref}
+        disabled={disabled}
         onClick={handleClick}
+        type={htmlType}
         {...rest}
       >
         {!loading && icon && <span className={"yq-ui-btn-icon"}>{icon}</span>}
@@ -147,34 +175,9 @@ function Button(props: ButtonProps) {
           </span>
         )}
         <span>{children}</span>
-      </a>
+      </button>
     );
   }
-
-  return (
-    <button
-      className={[
-        "yq-ui-btn",
-        `yq-ui-btn--${type}`,
-        className,
-        ...classNames,
-        ...innerClassNames,
-      ].join(" ")}
-      style={styles}
-      disabled={disabled}
-      onClick={handleClick}
-      type={htmlType}
-      {...rest}
-    >
-      {!loading && icon && <span className={"yq-ui-btn-icon"}>{icon}</span>}
-      {loading && (
-        <span className={"yq-ui-btn-icon"}>
-          <LoadingOutlined />
-        </span>
-      )}
-      <span>{children}</span>
-    </button>
-  );
-}
+);
 
 export default Button;

@@ -1,6 +1,7 @@
 import React, { useEffect, useRef, useState } from "react";
 import ReactDOM from "react-dom";
 import { isFragment, isValidElement } from "../../utils";
+import { tooltipObserver } from "../__common__/observer/tooltip";
 import { colors } from "../tag/list";
 import "./Tooltip.scss";
 import {
@@ -24,6 +25,7 @@ export interface TooltipProps
   color?: string;
   arrow?: boolean;
   defaultOpen?: boolean;
+  destroyTooltipOnHide?: boolean;
   trigger?: trigger;
   open?: boolean;
   zIndex?: number;
@@ -42,14 +44,15 @@ function Tooltip(props: TooltipProps) {
   const {
     title,
     children,
-    mouseEnterDelay = 0.1,
-    mouseLeaveDelay = 0.1,
+    mouseEnterDelay = 0.05,
+    mouseLeaveDelay = 0.05,
     placement = "top",
     color,
     arrow = true,
     defaultOpen = false,
     trigger = "hover",
     open = false,
+    destroyTooltipOnHide = false,
     zIndex = 100,
     onOpenChange,
     className,
@@ -74,16 +77,21 @@ function Tooltip(props: TooltipProps) {
   const [first, setFirst] = useState(true);
   // 背景颜色
   let bgColor = "";
+  // 移入延迟定时器
+  let enterTimer: ReturnType<typeof setTimeout> | null = null;
+  // 移出延迟定时器
+  let leaveTimer: ReturnType<typeof setTimeout> | null = null;
 
-  // 手动设置显示隐藏
-  useEffect(() => {
-    setVisible(open);
-  }, [open]);
+  //清除定时器
+  const clearAllTimer = () => {
+    enterTimer && clearTimeout(enterTimer);
+    leaveTimer && clearTimeout(leaveTimer);
+  };
 
   // 触发显示和隐藏
   useEffect(() => {
     const tooltip = tooltipRef.current as HTMLDivElement;
-    if (!triggerRef.current || !tooltip) return;
+    if (first) return;
     //取消上一次的动画
     if (animate.current) {
       animate.current.cancel();
@@ -102,6 +110,10 @@ function Tooltip(props: TooltipProps) {
       animate.current = tooltip.animate(disappearAnimation, animateTime);
       animate.current.onfinish = () => {
         tooltip.style.display = "none";
+        // 隐藏销毁
+        if (destroyTooltipOnHide) {
+          setFirst(true);
+        }
       };
     }
   }, [visible]);
@@ -119,31 +131,58 @@ function Tooltip(props: TooltipProps) {
     // 如果传入的children是纯文本将其放入span中
     const child = handleChild(children);
 
+    // 处理显示
+    const handleVisible = () => {
+      clearAllTimer();
+      enterTimer = setTimeout(() => {
+        setVisible(!visible);
+        triggerRef.current?.classList.add("yq-tooltip-active");
+        if (visible && trigger == "click") {
+          triggerRef.current?.classList.remove("yq-tooltip-active");
+          tooltipObserver.delObList();
+        } else {
+          tooltipObserver.addObList(triggerRef.current!);
+        }
+        if (first) setFirst(false);
+      }, mouseEnterDelay * 1000);
+    };
+
+    // 处理隐藏
+    const handleHidden = () => {
+      clearAllTimer();
+      leaveTimer = setTimeout(() => {
+        triggerRef.current?.classList.remove("yq-tooltip-active");
+        setVisible(false);
+      }, mouseLeaveDelay * 1000);
+    };
+
+    // 将child改造成触发器
+    const Trigger = React.cloneElement(child, {
+      ...triggerHandler(trigger, handleVisible, handleHidden),
+      ref: triggerRef,
+    });
+
+    // 手动设置显示隐藏
+    useEffect(() => {
+      if (open && first) handleVisible();
+      setVisible(open);
+    }, [open]);
+
+    useEffect(() => {
+      // 默认显示
+      if (defaultOpen) handleVisible();
+
+      //销毁定时器
+      () => {
+        clearAllTimer();
+      };
+    }, []);
+
     // 如果title为空则禁用
     if (!title) {
       triggerRef.current = undefined;
       return child;
     }
-
-    // 处理显示
-    const handleVisible = (e: React.MouseEvent<HTMLDivElement>) => {
-      setVisible(!visible);
-      if (!triggerRef.current) {
-        setFirst(false);
-        triggerRef.current = e.currentTarget as HTMLDivElement;
-      }
-    };
-
-    // 处理隐藏
-    const handleHidden = () => {
-      setVisible(false);
-    };
-
-    // 将child改造成触发器
-    const Trigger = React.cloneElement(
-      child,
-      triggerHandler(trigger, handleVisible, handleHidden)
-    );
 
     return (
       <>

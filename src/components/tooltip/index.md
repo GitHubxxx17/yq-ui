@@ -45,9 +45,8 @@ group:
 | color | string | - | false | 背景颜色 |
 | defaultOpen | boolean | false | false | 默认是否显隐 |
 | destroyTooltipOnHide| boolean | false | false | 关闭后是否销毁 Tooltip |
-| fresh | boolean | false | false | 默认情况下，Tooltip 在关闭时会缓存内容。设置该属性后会始终保持更新 |
-| mouseEnterDelay | number | 0.1 | false | 鼠标移入后延时多少才显示 Tooltip，单位：秒 |
-| mouseLeaveDelay | number | 0.1 | false | 鼠标移出后延时多少才隐藏 Tooltip，单位：秒 |
+| mouseEnterDelay | number | 0.05 | false | 鼠标移入后延时多少才显示 Tooltip，单位：秒 |
+| mouseLeaveDelay | number | 0.05 | false | 鼠标移出后延时多少才隐藏 Tooltip，单位：秒 |
 | placement | `top`\| `left`\| `right`\| `bottom`\| `topLeft`\|`topRight`\|`bottomLeft`\|`bottomRight`\|`leftTop`\|`leftBottom`\|`rightTop`\|`rightBottom` | `top` | false | 气泡框位置 |
 | trigger | `hover` \| `focus` \| `click` \| `contextMenu` | `hover` | false | 触发行为 |
 | open | boolean | false | false | 用于手动控制浮层显隐 |

@@ -39,7 +39,6 @@ export const getPos = (
   arrow: HTMLDivElement
 ) => {
   const {
-    y,
     top: tgTop,
     left: tgLeft,
     width: tgWidth,
@@ -83,6 +82,7 @@ export const getPos = (
 
   if (place === "top" || place === "bottom") {
     tlLeft += (tgWidth - tlWidth) / 2;
+
     arLeft = (tlWidth - arWidth) / 2;
   } else if (place === "topLeft" || place === "bottomLeft") {
     arLeft = arWidth + 6;
