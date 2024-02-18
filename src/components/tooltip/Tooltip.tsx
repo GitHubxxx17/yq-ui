@@ -1,7 +1,6 @@
 import React, { useEffect, useRef, useState } from "react";
 import ReactDOM from "react-dom";
 import { isFragment, isValidElement } from "../../utils";
-import { tooltipObserver } from "../__common__/observer/tooltip";
 import { colors } from "../tag/list";
 import "./Tooltip.scss";
 import {
@@ -139,9 +138,6 @@ function Tooltip(props: TooltipProps) {
         triggerRef.current?.classList.add("yq-tooltip-active");
         if (visible && trigger == "click") {
           triggerRef.current?.classList.remove("yq-tooltip-active");
-          tooltipObserver.delObList();
-        } else {
-          tooltipObserver.addObList(triggerRef.current!);
         }
         if (first) setFirst(false);
       }, mouseEnterDelay * 1000);

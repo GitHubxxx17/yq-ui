@@ -1,0 +1,251 @@
+@import "../__common__/base";
+@import "../__common__/color";
+
+.yq-tabs {
+  position: relative;
+  width: 100%;
+  height: 100%;
+  display: flex;
+
+  // 导航栏
+  &-nav {
+    position: relative;
+    width: 100%;
+    display: flex;
+    align-items: center;
+
+    &-extra-left {
+      margin-right: $yq-margin-sm;
+    }
+
+    &-extra-right {
+      margin-left: $yq-margin-sm;
+    }
+
+    &-scroll {
+      flex: 1;
+      position: relative;
+      overflow: hidden;
+      &::before,
+      &::after {
+        content: "";
+        position: absolute;
+        top: 0;
+        width: 0;
+        height: 100%;
+        opacity: 0;
+        transition: all 0.2s;
+        user-select: none;
+        cursor: pointer;
+      }
+
+      &::before {
+        left: 0;
+        box-shadow: $yq-box-shadow-tabs-overflow-left;
+      }
+
+      &::after {
+        right: 0;
+        box-shadow: $yq-box-shadow-tabs-overflow-right;
+      }
+    }
+
+    &-list {
+      position: relative;
+      display: flex;
+      height: 100%;
+      width: 100%;
+      overflow: scroll;
+      &::-webkit-scrollbar {
+        height: 0;
+        width: 0;
+      }
+    }
+
+    &-center {
+      justify-content: center;
+    }
+  }
+
+  // 导航栏tab
+  &-tab {
+    padding: $yq-padding-sm 0;
+    cursor: pointer;
+    transition: all 0.2s;
+    font-size: $yq-font-size;
+    white-space: nowrap;
+
+    &:hover {
+      color: $yq-blue-6;
+    }
+
+    &-small {
+      padding: $yq-padding-xs 0;
+    }
+
+    &-large {
+      padding: $yq-padding 0;
+      font-size: $yq-font-size-lg;
+    }
+  }
+
+  &-tab + &-tab {
+    margin-left: 32px;
+  }
+
+  // 选中
+  &-tab-active {
+    color: $yq-blue-6;
+  }
+
+  // 禁用
+  &-tab-disable {
+    cursor: no-drop;
+    color: $yq-color-text-quaternary;
+    &:hover {
+      color: $yq-color-text-quaternary;
+    }
+  }
+
+  // 图标
+  &-icon {
+    margin-right: $yq-margin-sm;
+  }
+
+  // 指示条
+  &-line {
+    background-color: $yq-blue-6;
+    position: absolute;
+    transition: all 0.2s ease-in-out;
+  }
+
+  // 展示区
+  &-tabpane {
+    font-size: $yq-font-size;
+    display: none;
+  }
+  // 展示区选中
+  &-tabpane-active {
+    display: block;
+  }
+}
+
+.yq-tabs {
+  // 位置
+  &-top {
+    flex-direction: column;
+    .yq-tabs-nav {
+      margin-bottom: 16px;
+      border-bottom: 1px solid #f0f0f0;
+    }
+    .yq-tabs-line {
+      bottom: 0;
+      height: 2px;
+    }
+  }
+
+  &-bottom {
+    flex-direction: column-reverse;
+    .yq-tabs-nav {
+      margin-top: 16px;
+      border-top: 1px solid #f0f0f0;
+    }
+    .yq-tabs-line {
+      top: 0;
+      height: 2px;
+    }
+  }
+
+  // 滚动开头阴影
+  &-top &-scroll-start,
+  &-bottom &-scroll-start {
+    &::before {
+      width: 20px;
+      opacity: 1;
+    }
+  }
+  // 滚动结尾阴影
+  &-top &-scroll-end,
+  &-bottom &-scroll-end {
+    &::after {
+      width: 20px;
+      opacity: 1;
+    }
+  }
+
+  &-left,
+  &-right {
+    .yq-tabs-nav {
+      width: auto;
+      flex-direction: column;
+
+      &-extra-left {
+        margin-right: 0;
+        margin-bottom: $yq-margin-sm;
+      }
+
+      &-extra-right {
+        margin-left: 0;
+        margin-top: $yq-margin-sm;
+      }
+
+      &-list {
+        flex-direction: column;
+      }
+    }
+
+    .yq-tabs-tab {
+      margin: 0;
+      padding: $yq-padding-xs $yq-padding-lg;
+
+      &-small {
+        padding: $yq-padding-xs $yq-padding-lg;
+      }
+
+      &-large {
+        padding: $yq-padding-xs $yq-padding-lg;
+      }
+    }
+  }
+
+  &-left {
+    flex-direction: row;
+    .yq-tabs-nav {
+      margin-right: 16px;
+      border-right: 1px solid #f0f0f0;
+    }
+    .yq-tabs-line {
+      width: 2px;
+      right: 0;
+    }
+  }
+
+  &-right {
+    flex-direction: row-reverse;
+    .yq-tabs-nav {
+      margin-left: 16px;
+      border-left: 1px solid #f0f0f0;
+    }
+    .yq-tabs-line {
+      width: 2px;
+      left: 0;
+    }
+  }
+
+  // 滚动开头阴影
+  &-left &-scroll-start,
+  &-right &-scroll-start {
+    &::before {
+      height: 20px;
+      opacity: 1;
+    }
+  }
+  // 滚动结尾阴影
+  &-left &-scroll-end,
+  &-right &-scroll-end {
+    &::after {
+      height: 20px;
+      opacity: 1;
+    }
+  }
+}
