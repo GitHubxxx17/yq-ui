@@ -1,6 +1,7 @@
 import { isValidReactNode } from "@/utils";
 import "./Tabs.scss";
 
+import { CloseOutlined, PlusOutlined } from "@ant-design/icons";
 import React, { useEffect, useRef, useState } from "react";
 
 // 标签类型
@@ -10,12 +11,18 @@ type tabItemType = {
   children: React.ReactNode;
   disabled?: boolean;
   icon?: React.ReactNode;
+  closable?: boolean;
+  closeIcon?: React.ReactNode;
 };
 
+// 附加内容类型
 type tabBarExtraContentType = {
   left?: React.ReactNode;
   right?: React.ReactNode;
 };
+
+// 编辑模式下操作类型
+type actionType = "add" | "remove";
 
 // 标签页基础属性
 export interface TabsProps
@@ -32,6 +39,19 @@ export interface TabsProps
   tabBarExtraContent?: React.ReactNode | tabBarExtraContentType;
   size?: "large" | "middle" | "small";
   TabPosition?: "left" | "right" | "top" | "bottom";
+  type?: "line" | "card" | "editable-card";
+  activeKey?: string;
+  addIcon?: React.ReactNode;
+  hideAdd?: boolean;
+  onEdit?: (
+    e: React.MouseEvent | React.KeyboardEvent | string,
+    action: actionType
+  ) => void;
+  onTabClick?: (key: string, event: React.MouseEvent) => void;
+  tabBarGutter?: number;
+  onTabScroll?: (direction: "left" | "right" | "top" | "bottom") => void;
+  tabBarStyle?: React.CSSProperties;
+  destroyInactiveTabPane?: boolean;
 }
 
 // 设置指示条的样式
@@ -93,6 +113,43 @@ const isVertical = (tabPosition: TabsProps["TabPosition"]) => {
   return false;
 };
 
+// 调整标签间隙
+const TabBarGutterStyle = (
+  tabPosition: TabsProps["TabPosition"],
+  tabBarGutter: number | undefined
+): React.CSSProperties => {
+  if (!tabBarGutter) return {};
+  if (isVertical(tabPosition)) {
+    return {
+      marginLeft: tabBarGutter,
+    };
+  } else {
+    return {
+      marginTop: tabBarGutter,
+    };
+  }
+};
+
+// 调整编辑区域高度
+const editableHeight = (
+  tabPosition: TabsProps["TabPosition"],
+  size: TabsProps["size"]
+): React.CSSProperties => {
+  if (size == "small") {
+    if (isVertical(tabPosition)) {
+      return {
+        padding: "10px 0",
+      };
+    } else {
+      return {
+        height: "34px",
+      };
+    }
+  }
+
+  return {};
+};
+
 function Tabs(props: TabsProps) {
   const {
     items = [],
@@ -104,6 +161,16 @@ function Tabs(props: TabsProps) {
     tabBarExtraContent,
     size = "middle",
     TabPosition = "top",
+    type = "line",
+    activeKey = defaultActiveKey,
+    addIcon,
+    hideAdd,
+    onEdit,
+    onTabClick,
+    tabBarGutter,
+    onTabScroll,
+    tabBarStyle,
+    destroyInactiveTabPane,
     ...rest
   } = props;
 
@@ -118,6 +185,16 @@ function Tabs(props: TabsProps) {
   // 滚动阴影显示
   const [scrollStart, setScrollStart] = useState(false);
   const [scrollEnd, setScrollEnd] = useState(false);
+  // 处理后的附加内容
+  const tabBarExtra = handleTabBarExtraContent(tabBarExtraContent);
+  //  可编辑卡片
+  const newtype = type == "editable-card" ? "card" : type;
+
+  // 受外部控制切换标签
+  useEffect(() => {
+    const index = items.findIndex((item) => item.key == activeKey);
+    handleClickTabs(items[index], index);
+  }, [activeKey]);
 
   //点击tab列表
   const handleClickTabs = (item: tabItemType, index: number) => {
@@ -159,20 +236,23 @@ function Tabs(props: TabsProps) {
     }
   };
 
-  useEffect(() => {
-    const index = items.findIndex((item) => item.key == defaultActiveKey);
-    handleClickTabs(items[index], index);
-    handleNavScroll();
-  }, []);
-
-  const tabBarExtra = handleTabBarExtraContent(tabBarExtraContent);
+  // 处理自定义编辑事件
+  const handleEdit = (
+    e: React.MouseEvent | React.KeyboardEvent | string,
+    action: actionType
+  ) => {
+    onEdit && onEdit(e, action);
+    setTimeout(() => {
+      handleNavScroll();
+    });
+  };
 
   return (
     <div
       className={["yq-tabs", `yq-tabs-${TabPosition}`, ...classNames].join(" ")}
       {...rest}
     >
-      <div className="yq-tabs-nav">
+      <div className="yq-tabs-nav" style={tabBarStyle}>
         {tabBarExtra.left && (
           <div className="yq-tabs-nav-extra-left">{tabBarExtra.left}</div>
         )}
@@ -189,45 +269,97 @@ function Tabs(props: TabsProps) {
               center ? "yq-tabs-nav-center" : "",
             ].join(" ")}
             ref={scrollListRef}
-            onScroll={handleNavScroll}
+            onScroll={() => {
+              onTabScroll && onTabScroll(TabPosition);
+              handleNavScroll();
+            }}
           >
-            {items.map((item, index) => (
+            <div className="yq-tabs-nav-list_inner">
+              {items.map((item, index) => (
+                <div
+                  ref={(el) => {
+                    if (el) {
+                      TabsRefs.current[index] = el;
+                    }
+                  }}
+                  className={[
+                    "yq-tabs-tab",
+                    `yq-tabs-tab-${size}`,
+                    `yq-tabs-tab-${newtype}`,
+                    currentKey == item.key ? "yq-tabs-tab-active" : "",
+                    item.disabled ? "yq-tabs-tab-disable" : "",
+                  ].join(" ")}
+                  onClick={(e) => {
+                    onTabClick && onTabClick(item.key, e);
+                    handleClickTabs(item, index);
+                  }}
+                  key={item.key}
+                  style={
+                    index != 0
+                      ? TabBarGutterStyle(TabPosition, tabBarGutter)
+                      : {}
+                  }
+                >
+                  {item.icon && (
+                    <span className="yq-tabs-icon">{item.icon}</span>
+                  )}
+                  {item.label}
+                  {((type == "editable-card" &&
+                    typeof item.closable === "undefined") ||
+                    item.closable) && (
+                    <span
+                      className="yq-tabs-closable"
+                      onClick={(e) => {
+                        e.stopPropagation();
+                        handleEdit(item.key, "remove");
+                      }}
+                    >
+                      {item.closeIcon ?? <CloseOutlined />}
+                    </span>
+                  )}
+                </div>
+              ))}
               <div
-                ref={(el) => {
-                  el && TabsRefs.current.push(el);
-                }}
-                className={[
-                  "yq-tabs-tab",
-                  `yq-tabs-tab-${size}`,
-                  currentKey == item.key ? "yq-tabs-tab-active" : "",
-                  item.disabled ? "yq-tabs-tab-disable" : "",
-                ].join(" ")}
-                onClick={() => handleClickTabs(item, index)}
-                key={item.key}
-              >
-                {item.icon && <span className="yq-tabs-icon">{item.icon}</span>}
-                {item.label}
-              </div>
-            ))}
-            <div className="yq-tabs-line" ref={lineRef}></div>
+                className="yq-tabs-line"
+                style={{ display: newtype == "card" ? "none" : "" }}
+                ref={lineRef}
+              ></div>
+            </div>
           </div>
         </div>
         {tabBarExtra.right && (
           <div className="yq-tabs-nav-extra-right">{tabBarExtra.right}</div>
         )}
+        {!hideAdd && type == "editable-card" && (
+          <div
+            className="yq-tabs-nav-editable"
+            onClick={(e) => handleEdit(e, "add")}
+            style={editableHeight(TabPosition, size)}
+          >
+            {addIcon ?? <PlusOutlined />}
+          </div>
+        )}
       </div>
       <div className="yq-tabs-conent">
-        {items.map((item, index) => (
+        {destroyInactiveTabPane && (
           <div
-            className={[
-              "yq-tabs-tabpane",
-              currentKey == item.key ? "yq-tabs-tabpane-active" : "",
-            ].join(" ")}
-            key={item.key}
+            className={["yq-tabs-tabpane", "yq-tabs-tabpane-active"].join(" ")}
           >
-            {item.children}
+            {items.find((item) => currentKey == item.key)?.children}
           </div>
-        ))}
+        )}
+        {!destroyInactiveTabPane &&
+          items.map((item) => (
+            <div
+              className={[
+                "yq-tabs-tabpane",
+                currentKey == item.key ? "yq-tabs-tabpane-active" : "",
+              ].join(" ")}
+              key={item.key}
+            >
+              {item.children}
+            </div>
+          ))}
       </div>
     </div>
   );

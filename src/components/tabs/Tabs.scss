@@ -13,6 +13,12 @@
     width: 100%;
     display: flex;
     align-items: center;
+    &::after {
+      z-index: 0;
+      content: "";
+      position: absolute;
+      background-color: #f0f0f0;
+    }
 
     &-extra-left {
       margin-right: $yq-margin-sm;
@@ -23,53 +29,56 @@
     }
 
     &-scroll {
+      z-index: 1;
       flex: 1;
       position: relative;
       overflow: hidden;
       &::before,
       &::after {
+        z-index: -1;
         content: "";
         position: absolute;
-        top: 0;
-        width: 0;
-        height: 100%;
         opacity: 0;
         transition: all 0.2s;
         user-select: none;
         cursor: pointer;
       }
-
-      &::before {
-        left: 0;
-        box-shadow: $yq-box-shadow-tabs-overflow-left;
-      }
-
-      &::after {
-        right: 0;
-        box-shadow: $yq-box-shadow-tabs-overflow-right;
-      }
     }
 
     &-list {
       position: relative;
-      display: flex;
       height: 100%;
       width: 100%;
+      display: flex;
       overflow: scroll;
       &::-webkit-scrollbar {
         height: 0;
         width: 0;
       }
+
+      &_inner {
+        position: relative;
+        display: flex;
+      }
     }
 
-    &-center {
+    &-editable {
+      cursor: pointer;
+      display: flex;
+      align-items: center;
       justify-content: center;
+      border: 1px solid #f0f0f0;
+      transition: all 0.2s;
+      font-size: $yq-font-size-sm;
+
+      &:hover {
+        color: $yq-blue-6;
+      }
     }
   }
 
   // 导航栏tab
   &-tab {
-    padding: $yq-padding-sm 0;
     cursor: pointer;
     transition: all 0.2s;
     font-size: $yq-font-size;
@@ -79,18 +88,24 @@
       color: $yq-blue-6;
     }
 
-    &-small {
-      padding: $yq-padding-xs 0;
+    &-card {
+      background-color: $yq-color-fill-quaternary;
+      border: 1px solid #f0f0f0;
+      padding: $yq-padding-xs $yq-padding;
     }
 
-    &-large {
-      padding: $yq-padding 0;
+    &-card.yq-tabs-tab-active {
+      background-color: transparent;
+    }
+
+    &-card.yq-tabs-tab-small {
+      padding: 6px $yq-padding;
+    }
+
+    &-card.yq-tabs-tab-large {
+      padding: $yq-padding-xs $yq-padding 6px;
       font-size: $yq-font-size-lg;
     }
-  }
-
-  &-tab + &-tab {
-    margin-left: 32px;
   }
 
   // 选中
@@ -110,6 +125,17 @@
   // 图标
   &-icon {
     margin-right: $yq-margin-sm;
+  }
+
+  &-closable {
+    margin-left: $yq-margin-sm;
+    font-size: $yq-font-size-sm;
+    color: $yq-color-text-tertiary;
+    transition: all 0.2s;
+
+    &:hover {
+      color: #000;
+    }
   }
 
   // 指示条
@@ -136,11 +162,26 @@
     flex-direction: column;
     .yq-tabs-nav {
       margin-bottom: 16px;
-      border-bottom: 1px solid #f0f0f0;
+
+      &::after {
+        bottom: 0px;
+      }
+
+      &-editable {
+        border-radius: 8px 8px 0 0;
+      }
     }
     .yq-tabs-line {
       bottom: 0;
       height: 2px;
+    }
+
+    .yq-tabs-tab-card {
+      border-radius: 8px 8px 0 0;
+    }
+
+    .yq-tabs-tab-card.yq-tabs-tab-active {
+      border-bottom-color: #ffffff;
     }
   }
 
@@ -148,62 +189,189 @@
     flex-direction: column-reverse;
     .yq-tabs-nav {
       margin-top: 16px;
-      border-top: 1px solid #f0f0f0;
+
+      &::after {
+        top: 0px;
+      }
+
+      &-editable {
+        border-radius: 0 0 8px 8px;
+      }
     }
     .yq-tabs-line {
       top: 0;
       height: 2px;
     }
-  }
 
-  // 滚动开头阴影
-  &-top &-scroll-start,
-  &-bottom &-scroll-start {
-    &::before {
-      width: 20px;
-      opacity: 1;
+    .yq-tabs-tab-card {
+      border-radius: 0 0 8px 8px;
+    }
+
+    .yq-tabs-tab-card.yq-tabs-tab-active {
+      border-top-color: #ffffff;
     }
   }
-  // 滚动结尾阴影
-  &-top &-scroll-end,
-  &-bottom &-scroll-end {
-    &::after {
-      width: 20px;
-      opacity: 1;
+
+  &-top,
+  &-bottom {
+    .yq-tabs {
+      &-nav {
+        &-scroll {
+          &::before {
+            left: 0;
+            box-shadow: $yq-box-shadow-tabs-overflow-left;
+          }
+
+          &::after {
+            top: 0;
+            right: 0;
+            box-shadow: $yq-box-shadow-tabs-overflow-right;
+          }
+        }
+
+        &::after {
+          left: 0;
+          width: 100%;
+          height: 1px;
+        }
+
+        &-center {
+          justify-content: center;
+        }
+
+        &-editable {
+          width: 40px;
+          padding: 12px 0;
+          margin-left: 2px;
+        }
+      }
+
+      // 滚动开头阴影
+      &-scroll-start {
+        &::before {
+          width: 20px;
+          height: 100%;
+          opacity: 1;
+        }
+      }
+      // 滚动结尾阴影
+      &-scroll-end {
+        &::after {
+          width: 20px;
+          height: 100%;
+          opacity: 1;
+        }
+      }
+
+      &-tab {
+        &-line {
+          padding: $yq-padding-sm 0;
+        }
+
+        &-line + .yq-tabs-tab-line {
+          margin-left: 32px;
+        }
+
+        &-line.yq-tabs-tab-small {
+          padding: $yq-padding-xs 0;
+        }
+
+        &-line.yq-tabs-tab-large {
+          padding: $yq-padding 0;
+          font-size: $yq-font-size-lg;
+        }
+
+        &-card + .yq-tabs-tab-card {
+          margin-left: 2px;
+        }
+      }
     }
   }
 
   &-left,
   &-right {
-    .yq-tabs-nav {
-      width: auto;
-      flex-direction: column;
-
-      &-extra-left {
-        margin-right: 0;
-        margin-bottom: $yq-margin-sm;
-      }
-
-      &-extra-right {
-        margin-left: 0;
-        margin-top: $yq-margin-sm;
-      }
-
-      &-list {
+    .yq-tabs {
+      &-nav {
+        width: auto;
         flex-direction: column;
+
+        &-editable {
+          width: 100%;
+          height: 40px;
+          margin-top: 2px;
+        }
+
+        &::after {
+          top: 0;
+          width: 1px;
+          height: 100%;
+        }
+
+        &-center {
+          align-items: center;
+        }
+
+        &-extra-left {
+          margin-right: 0;
+          margin-bottom: $yq-margin-sm;
+        }
+
+        &-extra-right {
+          margin-left: 0;
+          margin-top: $yq-margin-sm;
+        }
+
+        &-list_inner {
+          flex-direction: column;
+        }
+
+        &-scroll {
+          &::before {
+            top: 0;
+            box-shadow: $yq-box-shadow-tabs-overflow-top;
+          }
+
+          &::after {
+            bottom: 0;
+            box-shadow: $yq-box-shadow-tabs-overflow-bottom;
+          }
+        }
       }
-    }
 
-    .yq-tabs-tab {
-      margin: 0;
-      padding: $yq-padding-xs $yq-padding-lg;
-
-      &-small {
-        padding: $yq-padding-xs $yq-padding-lg;
+      // 滚动开头阴影
+      &-scroll-start {
+        &::before {
+          height: 20px;
+          width: 100%;
+          opacity: 1;
+        }
+      }
+      // 滚动结尾阴影
+      &-scroll-end {
+        &::after {
+          height: 20px;
+          width: 100%;
+          opacity: 1;
+        }
       }
 
-      &-large {
-        padding: $yq-padding-xs $yq-padding-lg;
+      &-tab {
+        &-line {
+          padding: $yq-padding-xs $yq-padding-lg;
+        }
+
+        &-line.yq-tabs-tab-small {
+          padding: $yq-padding-xs $yq-padding-lg;
+        }
+
+        &-line.yq-tabs-tab-large {
+          padding: $yq-padding-xs $yq-padding-lg;
+          font-size: $yq-font-size-lg;
+        }
+
+        &-card + .yq-tabs-tab-card {
+          margin-top: 2px;
+        }
       }
     }
   }
@@ -212,11 +380,24 @@
     flex-direction: row;
     .yq-tabs-nav {
       margin-right: 16px;
-      border-right: 1px solid #f0f0f0;
+      &::after {
+        right: 0px;
+      }
+      &-editable {
+        border-radius: 8px 0 0 8px;
+        border-right: none;
+      }
     }
     .yq-tabs-line {
       width: 2px;
       right: 0;
+    }
+    .yq-tabs-tab-card {
+      border-radius: 8px 0 0 8px;
+    }
+
+    .yq-tabs-tab-card.yq-tabs-tab-active {
+      border-right-color: #ffffff;
     }
   }
 
@@ -224,28 +405,24 @@
     flex-direction: row-reverse;
     .yq-tabs-nav {
       margin-left: 16px;
-      border-left: 1px solid #f0f0f0;
+      &::after {
+        left: 0px;
+      }
+      &-editable {
+        border-radius: 0 8px 8px 0;
+        border-left: none;
+      }
     }
     .yq-tabs-line {
       width: 2px;
       left: 0;
     }
-  }
-
-  // 滚动开头阴影
-  &-left &-scroll-start,
-  &-right &-scroll-start {
-    &::before {
-      height: 20px;
-      opacity: 1;
+    .yq-tabs-tab-card {
+      border-radius: 0 8px 8px 0;
     }
-  }
-  // 滚动结尾阴影
-  &-left &-scroll-end,
-  &-right &-scroll-end {
-    &::after {
-      height: 20px;
-      opacity: 1;
+
+    .yq-tabs-tab-card.yq-tabs-tab-active {
+      border-left-color: #ffffff;
     }
   }
 }
