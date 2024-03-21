@@ -15,7 +15,6 @@
     "prettier": "prettier src --write",
     "lint": "eslint . --ext .js,.cjs,.mjs,.ts,.cts,.mts --fix --ignore-path .gitignore",
     "lint-staged": "lint-staged",
-    "prepare": "npm run start:husky && npm run add:hook && npm run add:commit",
     "start:husky": "husky install",
     "add:hook": "npx husky add .husky/pre-commit \"npx lint-staged\"",
     "add:commit": "npx husky add .husky/commit-msg \"npx --no -- commitlint --edit \"$1\"\"",
