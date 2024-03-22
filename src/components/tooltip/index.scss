@@ -1,5 +1,5 @@
-@import "../__common__/base";
-@import "../__common__/color";
+@import "../__common__/scss/base";
+@import "../__common__/scss/color";
 
 .yq-tooltip {
   position: absolute;
@@ -7,6 +7,7 @@
   box-shadow: $yq-box-shadow;
   max-width: 250px;
   min-width: 32px;
+  width: max-content;
   min-height: 32px;
   user-select: none;
   display: none;

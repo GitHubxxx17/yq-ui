@@ -1,0 +1,99 @@
+$yq-font-size-xs: 10px;
+$yq-font-size-sm: 12px;
+$yq-font-size: 14px;
+$yq-font-size-lg: 16px;
+$yq-font-size-xl: 20px;
+$yq-font-size-heading-1: 38px;
+$yq-font-size-heading-2: 30px;
+$yq-font-size-heading-3: 24px;
+$yq-font-size-heading-4: 20px;
+$yq-font-size-heading-5: 16px;
+$yq-line-height: 1.5714285714285714;
+$yq-line-height-lg: 1.5;
+$yq-line-height-sm: 1.6666666666666667;
+$yq-font-height: 22px;
+$yq-font-height-lg: 24px;
+$yq-font-height-sm: 20px;
+$yq-line-height-heading-1: 1.2105263157894737;
+$yq-line-height-heading-2: 1.2666666666666666;
+$yq-line-height-heading-3: 1.3333333333333333;
+$yq-line-height-heading-4: 1.4;
+$yq-line-height-heading-5: 1.5;
+$yq-height-sm: 24px;
+$yq-height-xs: 16px;
+$yq-height: 32px;
+$yq-height-lg: 40px;
+$yq-motion-duration-fast: 0.1s;
+$yq-motion-duration-mid: 0.2s;
+$yq-motion-duration-slow: 0.3s;
+$yq-line-width-bold: 2px;
+$yq-border-radius-xs: 2px;
+$yq-border-radius-sm: 4px;
+$yq-border-radius: 6px;
+$yq-border-radius-lg: 8px;
+$yq-border-radius-outer: 4px;
+$yq-font-size-icon: 12px;
+$yq-line-width-focus: 4px;
+$yq-control-outline-width: 2px;
+$yq-control-interactive-size: 16px;
+$yq-font-weight-strong: 600;
+$yq-opacity-loading: 0.65;
+$yq-link-decoration: none;
+$yq-link-hover-decoration: none;
+$yq-link-focus-decoration: none;
+$yq-control-padding-horizontal: 12px;
+$yq-control-padding-horizontal-sm: 8px;
+$yq-padding-xxs: 4px;
+$yq-padding-xs: 8px;
+$yq-padding-sm: 12px;
+$yq-padding: 16px;
+$yq-padding-md: 20px;
+$yq-padding-lg: 24px;
+$yq-padding-xl: 32px;
+$yq-padding-content-horizontal-lg: 24px;
+$yq-padding-content-vertical-lg: 16px;
+$yq-padding-content-horizontal: 16px;
+$yq-padding-content-vertical: 12px;
+$yq-padding-content-horizontal-sm: 16px;
+$yq-padding-content-vertical-sm: 8px;
+$yq-margin-xxs: 4px;
+$yq-margin-xs: 8px;
+$yq-margin-sm: 12px;
+$yq-margin: 16px;
+$yq-margin-md: 20px;
+$yq-margin-lg: 24px;
+$yq-margin-xl: 32px;
+$yq-margin-xxl: 48px;
+$yq-box-shadow:
+  0 6px 16px 0 rgba(0, 0, 0, 0.08),
+  0 3px 6px -4px rgba(0, 0, 0, 0.12),
+  0 9px 28px 8px rgba(0, 0, 0, 0.05);
+$yq-box-shadow-secondary:
+  0 1px 2px 0 rgba(0, 0, 0, 0.03),
+  0 1px 6px -1px rgba(0, 0, 0, 0.02),
+  0 2px 4px 0 rgba(0, 0, 0, 0.02);
+$yq-box-shadow-popover-arrow: 2px 2px 5px rgba(0, 0, 0, 0.05);
+$yq-box-shadow-card:
+  0 1px 2px -2px rgba(0, 0, 0, 0.16),
+  0 3px 6px 0 rgba(0, 0, 0, 0.12),
+  0 5px 12px 4px rgba(0, 0, 0, 0.09);
+$yq-box-shadow-drawer-right:
+  -6px 0 16px 0 rgba(0, 0, 0, 0.08),
+  -3px 0 6px -4px rgba(0, 0, 0, 0.12),
+  -9px 0 28px 8px rgba(0, 0, 0, 0.05);
+$yq-box-shadow-drawer-left:
+  6px 0 16px 0 rgba(0, 0, 0, 0.08),
+  3px 0 6px -4px rgba(0, 0, 0, 0.12),
+  9px 0 28px 8px rgba(0, 0, 0, 0.05);
+$yq-box-shadow-drawer-up:
+  0 6px 16px 0 rgba(0, 0, 0, 0.08),
+  0 3px 6px -4px rgba(0, 0, 0, 0.12),
+  0 9px 28px 8px rgba(0, 0, 0, 0.05);
+$yq-box-shadow-drawer-down:
+  0 -6px 16px 0 rgba(0, 0, 0, 0.08),
+  0 -3px 6px -4px rgba(0, 0, 0, 0.12),
+  0 -9px 28px 8px rgba(0, 0, 0, 0.05);
+$yq-box-shadow-tabs-overflow-left: inset 10px 0 8px -8px rgba(0, 0, 0, 0.08);
+$yq-box-shadow-tabs-overflow-right: inset -10px 0 8px -8px rgba(0, 0, 0, 0.08);
+$yq-box-shadow-tabs-overflow-top: inset 0 10px 8px -8px rgba(0, 0, 0, 0.08);
+$yq-box-shadow-tabs-overflow-bottom: inset 0 -10px 8px -8px rgba(0, 0, 0, 0.08);
